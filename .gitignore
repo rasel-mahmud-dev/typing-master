@@ -1,0 +1,19 @@
+*.iml
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+build
+dist
+node_modules
+app/build
+# Local Netlify folder
+.netlify
+.env
