@@ -88,7 +88,7 @@ const TopNavigation = (props)=>{
 					
 					{ state.correctPercent !== null && <span>{state.correctPercent}%</span> }
 					
-					<span className="sound-btn">
+					<span className="sound-btn flex ">
 						
 						{!state.isMute
 							? <svg className="svg_on" onClick={handleToggleSound} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
