@@ -41,29 +41,18 @@ class Play extends PureComponent {
 		this.star3 = new Audio(star3)
 	}
 	
+
 	
-	
-	async componentDidMount() {
-		
-		console.log(this.props)
-		
+	componentDidMount() {
 		if(this.props.state.lessons && this.props.state.lessons.length > 0){
+			let lesson;
 			
-			let {lesson, catLessons} = await getLesson(this.props.state.catLessons, this.props.catId, this.props.lessonId)
-			let globalState = {}
 			
-			if(lesson) globalState.lesson = lesson
-			if(catLessons) globalState.catLessons = catLessons
-			
-			this.props.setState(globalState)
-			
-			// if(this.props.lessonSection === "favorite") {
-			 	// lesson = getLessonFavorite(this.props.state.favoriteLessons, this.props.lessonName)
-			// } else {
-				// lesson = getLesson(this.props.state.catLessons, this.props.catId, this.props.lessonId)
-				// console.log(lesson)
-			// }
-			
+			if(this.props.lessonSection === "favorite") {
+			 	lesson = getLessonFavorite(this.props.state.favoriteLessons, this.props.lessonName)
+			} else {
+				lesson = getLesson(this.props.state.lessons, this.props.lessonSection, this.props.lessonName)
+			}
 			this.setState({
 				...this.state,
 				lesson: {
@@ -73,7 +62,7 @@ class Play extends PureComponent {
 					textArr: lesson.text.split("")
 				}
 			})
-			// this.props.setState({lesson: lesson})
+			this.props.setState({lesson: lesson})
 		}
 		
 		window.addEventListener("keydown", this.progressHandler)
@@ -90,19 +79,13 @@ class Play extends PureComponent {
 		window.removeEventListener("keydown", this.progressHandler)
 	}
 	
-	async componentDidUpdate(previousProps, previousState, snapshot) {
+	componentDidUpdate(previousProps, previousState, snapshot) {
 		// this.bigLetterTimeId && clearTimeout(this.bigLetterTimeId)
 		
 		if(previousProps.state.lessons !== this.props.state.lessons){
 			if(this.props.state.lessons) {
-				let {lesson, catLessons} = await getLesson(this.props.state.catLessons, this.props.catId, this.props.lessonId)
-				let globalState = {}
-				
-				if(lesson) globalState.lesson = lesson
-				if(catLessons) globalState.catLessons = catLessons
-				
-				this.props.setState(globalState)
-				
+				let lesson = getLesson(this.props.state.lessons, this.props.lessonSection, this.props.lessonName)
+				this.props.setState({lesson: lesson})
 				this.setState({
 					...this.state,
 					lesson: {
@@ -142,18 +125,14 @@ class Play extends PureComponent {
 		})
 	}
 	
-	async handleJumpNextLesson(e){
+	handleJumpNextLesson(e){
 		const {nextLessonIndex} = this.props.state.lesson
 		
-		let {lesson, catLessons} = await getLesson(this.props.state.catLessons, this.props.catId, this.props.lessonId, nextLessonIndex)
-		
-		
-		let globalState = {correctPercent: null	}
-		if(lesson) globalState.lesson = lesson
-		if(catLessons) globalState.catLessons = catLessons
-		this.props.setState(globalState)
-		console.log(globalState)
-		
+		let lesson = getLesson(this.props.state.lessons, this.props.lessonSection, this.props.lessonName, nextLessonIndex)
+		this.props.setState({
+			lesson: lesson,
+			correctPercent: null,
+		})
 		this.setState({
 			...this.state,
 			incorrectIndexes: new Set(),
@@ -315,8 +294,8 @@ Play.propTypes = {
 		lessons: Array,
 	},
 	setState: Function,
-	catId: String,
-	lessonId: String
+	lessonName: String,
+	lessonSection: String
 };
 
 export default connect(Play);

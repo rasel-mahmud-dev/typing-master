@@ -3,7 +3,7 @@ import AppContext, {connect} from "../context/AppContext";
 import React, {useContext, useState} from "preact/compat";
 import {Link} from "preact-router"
 import AlertPopup from "../components/AlertPopup";
-import {deleteLesson, getLessonsApi} from "../actions";
+import {deleteLesson} from "../actions";
 
 function HomePage(props){
 	const [ context, setContext ] = useState("all") // love
@@ -29,24 +29,21 @@ function HomePage(props){
 		})
 	}
 	
-	function sections(ids, cat){
+	function sections(ids, lesson){
 		return (
 			<div className="bg-primary-400">
-				{ids.indexOf(cat._id) !== -1 &&
-				appContext.state.catLessons &&
-					appContext.state.catLessons[cat._id] &&
-					appContext.state.catLessons[cat._id].map(item=>(
+				{ids.indexOf(lesson.label) !== -1 && lesson.items && lesson.items.map(item=>(
 					<li className="lesson_link">
-						<h1>{item.label}</h1>
-						<Link className="" href={`#/play/${cat._id}/${item._id}`}>{item.label}</Link>
+						<Link className="" href={`#/play/${lesson.label}/${item.label}`}>{item.label}</Link>
 						<div className="action_icons">
 							<svg onClick={()=>togglePopup({
-								catId: cat._id,
-								id: item._id
+								lessonSection: lesson.label,
+								id: item.id
 							})} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/></svg>
-							<Link href={`#/add-new-lesson/${cat._id}/${item._id}`}>
+							<Link href={`#/add-new-lesson/${lesson.label}/${item.id}`}>
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M290.74 93.24l128.02 128.02-277.99 277.99-114.14 12.6C11.35 513.54-1.56 500.62.14 485.34l12.7-114.22 277.9-277.88zm207.2-19.06l-60.11-60.11c-18.75-18.75-49.16-18.75-67.91 0l-56.55 56.55 128.02 128.02 56.55-56.55c18.75-18.76 18.75-49.16 0-67.91z"/></svg>
 							</Link>
+						
 						</div>
 					</li>
 				))}
@@ -54,39 +51,30 @@ function HomePage(props){
 		)
 	}
 	
-	async function toggleCollapse(catId){
-		
-		let updatedCatLessons = {...appContext.state.catLessons}
-		if(!updatedCatLessons[catId]) {
-			let result = await getLessonsApi(catId)
-			if(result) {
-				updatedCatLessons[catId] = result
-				appContext.setState({catLessons: updatedCatLessons})
-			}
-		}
-		
+	function toggleCollapse(label){
 		let updatedShowSections = [...showSections]
-		let a=  updatedShowSections.indexOf(catId)
+		let a=  updatedShowSections.indexOf(label)
 		if(a === -1) {
-			updatedShowSections.push(catId)
+			updatedShowSections.push(label)
 		} else {
 			updatedShowSections.splice(a, 1)
 		}
 		setShowIds(updatedShowSections)
 	}
 	
-	
 	function renderAllLesson(){
-		return appContext.state.categories &&  appContext.state.categories.length > 0 && (
+		return appContext.state.lessons &&  appContext.state.lessons.length > 0 && (
+			
 			<div>
-				{ appContext.state.categories.map(cat=>(
+				{ appContext.state.lessons.map(lesson=>(
 					<div className="p-5 my-4">
-						<h4 onClick={(e)=>toggleCollapse(cat._id)} className="font-medium my-1">{cat.label}</h4>
+						<h4 onClick={(e)=>toggleCollapse(lesson.label)} className="font-medium my-1">{lesson.label}</h4>
 						<div className="mt-4">
-							{sections(showSections, cat)}
+							{sections(showSections, lesson)}
 						</div>
 					</div>
-				))}
+				
+				)) }
 			</div>
 		)
 	}
@@ -130,13 +118,10 @@ function HomePage(props){
 		}
 	}
 	
-	console.log(appContext)
-	
 	return(
 		<div>
 			
 			{popupData.status && <AlertPopup message="Are you sure to delete ?" onChange={handleAlertChoose} /> }
-			
 			
 			<div className="lesson_tabs">
 				<div onClick={changeItem} className={["lesson_tabs__item", context === "all" ? "lesson_active": ""].join(" ")}>

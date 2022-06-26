@@ -9,8 +9,6 @@ import Play from "./pages/Play";
 import TopNavigation from "./components/TopNavigation";
 const le = import("./lessons.js")
 import {createHashHistory} from "history"
-import {getLessonsApi} from "./actions";
-import backend from "./api";
 
 
 const App = ()=>{
@@ -18,21 +16,10 @@ const App = ()=>{
 	
 	useEffect(async ()=>{
 		
-		// fetch("http://localhost:8888/.netlify/functions/api/categories")
-		fetch(backend + "/categories")
-			.then(res=>res.json())
-			.then(res=>{
-				appContext.setState({categories: res})
-		}).catch(ex=>{
-			console.log(ex)
-		})
-		
 		let les = await le
 		let lessons = les.default
 
 		appContext.setState({lessons: lessons.lessons, favoriteLessons: lessons.favorite})
-
-		
 		// console.log(lessons)
 	}, [])
 	
@@ -54,7 +41,7 @@ const App = ()=>{
 					<Route index={true} path="/" component={HomePage} />
 					<Route index={true} path="/about" component={AboutPage} />
 					<Route index={true} path="/add-new-lesson/:lessonSection/:id" component={AddNewLesson} />
-					<Route index={true} path="/play/:catId/:lessonId" component={Play} />
+					<Route index={true} path="/play/:lessonSection/:lessonName" component={Play} />
 					{/*<AsyncRoute*/}
 					{/*  path="/login"*/}
 					{/*  getComponent={() => import('./pages/LoginPage').then(module => module.default).catch(err=>{})}*/}

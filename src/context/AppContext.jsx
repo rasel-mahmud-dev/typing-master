@@ -8,8 +8,6 @@ export function provider(HOC){
 	return class extends Component{
 		state = {
 			lessons: [],
-			catLessons: {}, // key: cat_id: value: lesson[]
-			categories: [],
 			favoriteLessons: [],
 			lesson: null,
 			isMute: false,
