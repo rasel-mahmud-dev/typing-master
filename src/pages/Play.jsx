@@ -202,15 +202,22 @@ class Play extends PureComponent {
 		updateState.currentPressedLetter = value
 		
 		if (textArr[updateState.currentIndex].toUpperCase() === value.toUpperCase()) {
+			this.wrongPress = false
 			this.keyPressSound()
 			updateState.correctIndex.add(updateState.currentIndex)
 			updateState.currentPressedLetter = value
 			updateState.currentIndex = updateState.currentIndex + 1
 		} else {
-			this.keyPressSound(true)
-			updateState.incorrectIndexes.add(updateState.currentIndex)
-			updateState.currentIndex = updateState.currentIndex + 1
+			this.keyPressSound(true);
 			
+			if(this.wrongPress){
+				// dont next letter if wrong press twitch
+				
+			} else {
+				updateState.incorrectIndexes.add(updateState.currentIndex)
+				updateState.currentIndex = updateState.currentIndex + 1
+				this.wrongPress = true
+			}
 		}
 		
 		updateState.totalHits += 1
