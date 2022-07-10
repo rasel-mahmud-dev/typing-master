@@ -32,6 +32,18 @@ class Play extends PureComponent {
 				textArr: []
 			},
 		}
+		
+		this.whiteListKey = [
+		16,
+		9,
+		20,
+		18,
+		91,
+		8,
+		17,
+		93,
+		27
+	]
 
 		this.correctAudio = new Audio(correctSound)
 		this.errorAudio = new Audio(errorSound)
@@ -64,23 +76,27 @@ class Play extends PureComponent {
 			})
 			this.props.setState({lesson: lesson})
 		}
-		
 		window.addEventListener("keydown", this.progressHandler)
-		
-		// window.addEventListener("keydown", (e)=>{
-		// 	if(e.keyCode == 32 && e.target == document.body) {
-		// 		e.preventDefault();
-		// 	}
-		// })
-		
 	}
 	
 	componentWillUnmount() {
 		window.removeEventListener("keydown", this.progressHandler)
 	}
+
+	
+	speak(text){
+		let s = new SpeechSynthesisUtterance()
+		s.text= text
+		s.lang = "en-US"
+		s.pitch = 100000
+		s.rate = 2
+		speechSynthesis.speak(s)
+	}
+	
+  
 	
 	componentDidUpdate(previousProps, previousState, snapshot) {
-		// this.bigLetterTimeId && clearTimeout(this.bigLetterTimeId)
+		this.bigLetterTimeId && clearTimeout(this.bigLetterTimeId)
 		
 		if(previousProps.state.lessons !== this.props.state.lessons){
 			if(this.props.state.lessons) {
@@ -98,16 +114,16 @@ class Play extends PureComponent {
 				})
 			}
 		}
-		
-		
+
+		console.log(previousState.currentPressedLetter, this.state.currentPressedLetter)
+
 		if(previousState.currentPressedLetter !== this.state.currentPressedLetter){
-			
-			this.bigLetterTimeId = setTimeout(()=>{
-				this.setState({
-					...this.state,
-					currentPressedLetter: ""
-				})
-			}, 100)
+			// this.bigLetterTimeId = setTimeout(()=>{
+			// 	this.setState({
+			// 		...this.state,
+			// 		currentPressedLetter: ""
+			// 	})
+			// }, 100)
 		}
 		
 	}
@@ -152,6 +168,7 @@ class Play extends PureComponent {
 		})
 	}
 	
+	
 	playCongratulationSound(){
 		if (this.props.state.congratsSound) {
 			this?.star1.play()
@@ -166,9 +183,12 @@ class Play extends PureComponent {
 		}
 	}
 	
+	
 	progressHandler=(e)=>{
 		e.preventDefault();
-
+		
+		if(this.whiteListKey.indexOf(e.keyCode) !== -1) return
+		
 		let value = e.key
 		let updateState = {...this.state}
 		
@@ -226,28 +246,33 @@ class Play extends PureComponent {
 			this.playCongratulationSound();
 			updateState.finished = true
 		}
-		
+	
 		this.setState(updateState, ()=>{
 			let correctPercent = Math.round((updateState.currentIndex/updateState.totalHits)*100);
+			// let nextLetter = updateState.lesson.textArr[updateState.currentIndex]
+			// this.speak(nextLetter)
 			this.props.setState({
 				correctPercent: correctPercent
 			})
 		})
 	}
 	
+	
+	
 	keyPressSound(isError=false){
 		if(!this.props.state.isMute){
 			if(isError){
 				this.errorAudio?.play();
 			} else {
-				this.correctAudio?.play()
+				this.correctAudio?.play().then(re=>{
+				}).catch(ex=>{
+					console.log(ex)
+				})
 			}
 		}
 	}
 	
-	
 	render() {
-		
 		const {correctIndex, incorrectIndexes, currentPressedLetter, currentIndex, incorrect, totalHits, lesson} = this.state
 		let textArr = lesson.textArr;
 

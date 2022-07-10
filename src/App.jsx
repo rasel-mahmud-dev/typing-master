@@ -7,23 +7,27 @@ import AboutPage from "./pages/AboutPage";
 import AddNewLesson from "./pages/AddNewLesson";
 import Play from "./pages/Play";
 import TopNavigation from "./components/TopNavigation";
+
 const le = import("./lessons.js")
+
 import {createHashHistory} from "history"
 
 
 const App = ()=>{
+
+
 	const appContext = useContext(AppContext);
-	
+
 	useEffect(async ()=>{
-		
 		let les = await le
 		let lessons = les.default
-
 		appContext.setState({lessons: lessons.lessons, favoriteLessons: lessons.favorite})
 		// console.log(lessons)
 	}, [])
+
+
 	
-	
+
 	return (
 		<div className="content mt-20">
 			
