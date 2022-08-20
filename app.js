@@ -1,13 +1,24 @@
+const http = require("http")
 
-let str = "Hi My name"
+const server = http.createServer((req, res)=>{
+    if(req.url === "/"){
+        const { fork } = require('child_process');
+        const child = fork('./getCount.js');
 
-let s = str.split("").reverse().join("")
-console.log(s);
+        child.on('message', (message) => {
+            // console.log('Returning /total results');
+            res.setHeader("Access-Control-Allow-Origin", "*")
+            res.setHeader("Content-Type", "application/json")
+            res.write(JSON.stringify({name: message}))
+            res.end()
+        });
+        child.send('START');
+    }
+})
 
-let n = ""
-let totalItems = str.length - 1;
-for (let i = totalItems; i > 0; i++) {
-    n += str[i]
-}
 
-console.log(n)
+
+
+
+
+server.listen(1000)

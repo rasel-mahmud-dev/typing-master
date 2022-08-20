@@ -41,7 +41,7 @@ const App = ()=>{
 				
 				{/*<button className="bg-primary-400 m-10" onClick={handleClick}>Click</button>*/}
 				<TopNavigation state={appContext.state} setState={appContext.setState} />
-				<Router  history={createHashHistory()}  >
+				<Router history={createHashHistory()}  >
 					<Route index={true} path="/" component={HomePage} />
 					<Route index={true} path="/about" component={AboutPage} />
 					<Route index={true} path="/add-new-lesson/:lessonSection/:id" component={AddNewLesson} />

@@ -6,56 +6,36 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <style>
-    h1{
-      margin: 20px;
-      padding: 20px;
-      background-color: red;
-      border: 10px dotted orange;
-    }
-  </style>
 </head>
 <body>
 
-  <h1>Hi</h1>
+<input type="text">
+  <div>
+    <h1>This is a Heading Tag</h1>
+    <h2>It also another h2 tag</h2>
+    <h2>It also another h2 tag</h2>
+    <h2>It also another h2 tag</h2>
+    <h2>It also another h2 tag</h2>
+  </div>
+  <textarea>
+
+  </textarea>
+
+  <div class="out"></div>
 
 <script >
-  
-  function m(n){
-    let r = ""
-    for (let i = 0; i < n; i++) {
-      r+= "#"
-    }
-    return r
-  }
 
-  function staircase(n) {
-    // Write your code here
-    
-    function blank(n){
-      let r = ""
-      for (let i = 0; i < n; i++) {
-        r+=  " "
-      }
-      return r
-    }
-    
-    if(n > 0 && n <= 100){
-      let result  = ""
-      for (let i = 1; i <= n; i++) {
-      console.log( blank(n - 1))
-        result +=  blank(n - 1) + m(i) + "\n"
-      }
-    
-      return result;
-    }
-  
-  }
+const textarea = document.querySelector("textarea")
 
-  console.log(
-    staircase(20)
-  )
-  
+textarea.addEventListener("input", (e)=>{
+
+  const out = document.querySelector(".out")
+  out.innerHTML = null 
+  out.innerHTML = textarea.value
+  let o = out.textContent.replaceAll("\n", "")
+  console.log(o.trimRight());
+})
+
 
 
 

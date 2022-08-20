@@ -118,12 +118,12 @@ class Play extends PureComponent {
 		console.log(previousState.currentPressedLetter, this.state.currentPressedLetter)
 
 		if(previousState.currentPressedLetter !== this.state.currentPressedLetter){
-			// this.bigLetterTimeId = setTimeout(()=>{
-			// 	this.setState({
-			// 		...this.state,
-			// 		currentPressedLetter: ""
-			// 	})
-			// }, 100)
+			this.bigLetterTimeId = setTimeout(()=>{
+				this.setState({
+					...this.state,
+					currentPressedLetter: ""
+				})
+			}, 100)
 		}
 		
 	}
@@ -247,14 +247,20 @@ class Play extends PureComponent {
 			updateState.finished = true
 		}
 	
-		this.setState(updateState, ()=>{
-			let correctPercent = Math.round((updateState.currentIndex/updateState.totalHits)*100);
-			// let nextLetter = updateState.lesson.textArr[updateState.currentIndex]
-			// this.speak(nextLetter)
-			this.props.setState({
-				correctPercent: correctPercent
-			})
+		this.setState(updateState)
+		let correctPercent = Math.round((updateState.currentIndex/updateState.totalHits)*100);
+		this.props.setState({
+			correctPercent: correctPercent
 		})
+
+		// this.setState(updateState, ()=>{
+		// 	let correctPercent = Math.round((updateState.currentIndex/updateState.totalHits)*100);
+		// 	// let nextLetter = updateState.lesson.textArr[updateState.currentIndex]
+		// 	// this.speak(nextLetter)
+		// 	this.props.setState({
+		// 		correctPercent: correctPercent
+		// 	})
+		// })
 	}
 	
 	
