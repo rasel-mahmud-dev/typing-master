@@ -17,6 +17,8 @@ var e =  {
         {id: "9asdasd", label: "assa sasa", text: "assa asas sasa sass "},
         {id: "10asdasd", label: "assa sass", text: "assa sass assa sasl "},
         {id: "1a", label: "sdls dssl", text: "asls dssl sdls dssl "},
+        {id: "11a", label: ".lkide", text: "l.s. ikie .ls. kidi kiid ikic ikei ieki dffj fduf dfuf dffj dffd tfft dfdf tfdt fddf fttd dfdf tftu ftut tfut fttu tftj "},
+        {id: "11a", label: ".lkide word", text: "sarcastic. sarcastic. icicle. clerical. critic. arctic. floodlit. frederick. cedric. couturier. frescoes. face. force. coffee. freckled. cutter "},
         
         {id: "6a", label: "riffle",
           type: "word",

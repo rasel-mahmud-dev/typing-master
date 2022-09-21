@@ -86,7 +86,8 @@ const TopNavigation = (props)=>{
 				<div className="flex right-nav items-center">
          
 					
-					{ state.correctPercent !== null && <span>{state.correctPercent}%</span> }
+					<span className="mr-10 text-white" >{state.speed} WPM</span>
+					{ state.correctPercent !== null && <span className="text-white">{state.correctPercent}%</span> }
 					
 					<span className="sound-btn flex ">
 						

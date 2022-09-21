@@ -10,6 +10,7 @@ import errorSound from "../assets/sound/error.mp3"
 import star1 from "../assets/sound/star1.mp3"
 import star2 from "../assets/sound/star2.mp3"
 import star3 from "../assets/sound/star3.mp3"
+import log from './../utils/log';
 
 
 class Play extends PureComponent {
@@ -47,7 +48,7 @@ class Play extends PureComponent {
 
 		this.correctAudio = new Audio(correctSound)
 		this.errorAudio = new Audio(errorSound)
-		
+	
 		this.star1 = new Audio(star1)
 		this.star2 = new Audio(star2)
 		this.star3 = new Audio(star3)
@@ -139,6 +140,12 @@ class Play extends PureComponent {
 			currentPressedLetter: "",
 			correctIndex: new Set(),
 		})
+		this.props.setState({
+			speed: 0,
+			netSpeed: 9,
+			startTime: 0,
+			correctPercent: 0
+		})
 	}
 	
 	handleJumpNextLesson(e){
@@ -183,16 +190,55 @@ class Play extends PureComponent {
 		}
 	}
 	
+	// calculate wpm
+	calculateSpeed(userText, timeSpent){
+
+		/** calculate WPM
+		 3s = 2 word
+		1s = 2/3  word
+		60s = (2/3)*60  word (wpm)
+		* */
+
+		let userInputWord = userText.split(" ").length
+		let speed = (userInputWord / timeSpent ) * 60
+		return Math.floor(speed)
+	}
 	
 	progressHandler=(e)=>{
 		e.preventDefault();
+
 		
 		if(this.whiteListKey.indexOf(e.keyCode) !== -1) return
 		
 		let value = e.key
 		let updateState = {...this.state}
+
+		// start typing
+		if(!updateState.incorrectIndexes.size && !updateState.correctIndex.size){
+			this.props.setState({
+				startTime: Date.now()
+			})
+		}
+		
+		let now = Date.now();
+
+		let speed = 0
+		let netSpeed = 0
+
+		let pregressTimeS = (now - this.props.state.startTime) / 1000;
+		// pregressTimeS
+
+		const wordArr = this.state.lesson.textArr.slice(0, this.state.currentIndex + 1);
+		let w = wordArr.join("")
+		speed = this.calculateSpeed(w, pregressTimeS)
+
+		// 60 - 30 (60/30) * 60  
 		
 		let textArr = updateState.lesson.textArr;
+
+		// disable scrolling when press spacebar
+		if(e.keyCode === 32) e.preventDefault()
+
 		if (e.key === "Enter") {
 			if (e.shiftKey) {
 				this.handleJumpNextLesson()
@@ -218,6 +264,8 @@ class Play extends PureComponent {
 		if(updateState.finished){
 			return false
 		}
+	
+		
 		
 		updateState.currentPressedLetter = value
 		
@@ -235,10 +283,17 @@ class Play extends PureComponent {
 				
 			} else {
 				updateState.incorrectIndexes.add(updateState.currentIndex)
-				updateState.currentIndex = updateState.currentIndex + 1
+				// don't next char it press wrong key 
+				// updateState.currentIndex = updateState.currentIndex + 1
 				this.wrongPress = true
 			}
 		}
+
+		// speed = 
+
+		
+	
+
 		
 		updateState.totalHits += 1
 		
@@ -250,6 +305,8 @@ class Play extends PureComponent {
 		this.setState(updateState)
 		let correctPercent = Math.round((updateState.currentIndex/updateState.totalHits)*100);
 		this.props.setState({
+			speed,
+			netSpeed,
 			correctPercent: correctPercent
 		})
 

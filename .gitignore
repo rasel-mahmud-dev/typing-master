@@ -16,4 +16,5 @@ node_modules
 app/build
 # Local Netlify folder
 .netlify
+deploy.sh
 .env

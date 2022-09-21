@@ -12,7 +12,10 @@ export function provider(HOC){
 			lesson: null,
 			isMute: false,
 			correctPercent: null,
-			congratsSound: true
+			congratsSound: true,
+			startTime: 0,
+			speed: 0, // WPM
+			netSpeed: 0
 		}
 		
 		handleSetState = (value)=>{
